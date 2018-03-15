@@ -18,7 +18,7 @@ main(int argc, char** argv)
     vector<edge> edges;
 
     edges.emplace_back(0, 1, 8, 7);
-    edges.emplace_back(0, 1, 8, 5);
+    edges.emplace_back(0, 1, 9, 5);
     edges.emplace_back(0, 1, 7, 6);
     edges.emplace_back(0, 1, 7, 2);
     edges.emplace_back(0, 1, 6, 0);
@@ -27,7 +27,7 @@ main(int argc, char** argv)
     edges.emplace_back(0, 1, 5, 4);
 
     // these are the nodes containing mutations:
-    unordered_set<int32_t> mut_nodes({ 8, 7, 5, 3, 4 });
+    unordered_set<int32_t> mut_nodes({9, 8, 7, 5, 3, 4 });
 
     auto res = count_mnodes(edges,mut_nodes);
 
@@ -39,3 +39,5 @@ main(int argc, char** argv)
         cout << e.parent << ' ' << e.child << ' ' << res.second[X++] << '\n';
     }
 }
+
+
