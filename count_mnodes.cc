@@ -2,16 +2,18 @@
 #include <vector>
 #include <cstdint>
 #include <unordered_set>
+#include <unordered_map>
 #include <iostream>
 #include <queue>
 #include <algorithm>
 #include "edge.hpp"
 using namespace std;
 
-pair<unsigned, vector<unsigned>>
+pair<unordered_map<int32_t, unsigned>, vector<unsigned>>
 count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
 {
-    unsigned nmuts_on_root = 0;
+    // unsigned nmuts_on_root = 0;
+    unordered_map<int32_t, unsigned> muts_on_subtree_roots;
     vector<unsigned> mcounts(edges.size(), 0);
     while (!mut_nodes.empty())
         {
@@ -36,6 +38,8 @@ count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
             auto b = lower_bound(
                 edges.cbegin(), edges.cend(), most_ancient_mut_node,
                 [](const edge& e, int32_t v) { return e.parent > v; });
+            cout << "Fate of " << most_ancient_mut_node << ' '
+                 << (b == edges.cend()) << '\n';
             auto e = upper_bound(
                 b, edges.cend(), most_ancient_mut_node,
                 [](const int32_t v, const edge& e) { return v > e.parent; });
@@ -51,6 +55,8 @@ count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
                 }
             for (auto i = b; i < e; ++i)
                 {
+                    cout << "in first pass: " << b->parent << ' ' << b->child
+                         << '\n';
                     eprocessor.push(i);
                 };
             while (!eprocessor.empty())
@@ -90,8 +96,15 @@ count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
                     auto i = tip;
                     if (mut_nodes.find(edges[i].child) != mut_nodes.end())
                         {
+                            cout << i << " is mutaion node\n";
                             to_remove.insert(edges[i].child);
                             ++mcounts[i];
+                            if (edges[i].parent == most_ancient_mut_node)
+                                {
+                                    cout << "found mutation on root node\n";
+                                    muts_on_subtree_roots[most_ancient_mut_node]++;
+                                    //++nmuts_on_root;
+                                }
                         }
                     while (cindexes[i] != numeric_limits<size_t>::max())
                         {
@@ -105,9 +118,17 @@ count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
                                     to_remove.insert(edges[i].parent);
                                     ++mcounts[cindexes[i]];
                                 }
+                            // if (cindexes[i] ==
+                            // numeric_limits<size_t>::max())
+                            if (edges[cindexes[i]].parent
+                                == most_ancient_mut_node)
+                                {
+                                    muts_on_subtree_roots[most_ancient_mut_node]++;
+                                    //++nmuts_on_root;
+                                    cout << "found mutation on root node "
+                                         << most_ancient_mut_node << '\n';
+                                }
                             i = cindexes[i];
-                            if (cindexes[i] == numeric_limits<size_t>::max())
-                                ++nmuts_on_root;
                         }
                 }
             for (auto& tr : to_remove)
@@ -126,5 +147,5 @@ count_mnodes(const vector<edge>& edges, unordered_set<int32_t> mut_nodes)
                          << '\n';
                 }
         }
-    return std::make_pair(nmuts_on_root, std::move(mcounts));
+    return std::make_pair(muts_on_subtree_roots, std::move(mcounts));
 }

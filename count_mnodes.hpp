@@ -5,11 +5,11 @@
 #include <vector>
 #include <cstdint>
 #include <unordered_set>
+#include <unordered_map>
 #include "edge.hpp"
 
-std::pair<unsigned, std::vector<unsigned>>
+std::pair<std::unordered_map<std::int32_t, unsigned>, std::vector<unsigned>>
 count_mnodes(const std::vector<edge>& edges,
              std::unordered_set<std::int32_t> mut_nodes);
-
 
 #endif

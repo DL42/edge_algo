@@ -17,8 +17,8 @@ main(int argc, char** argv)
 {
     vector<edge> edges;
 
-    edges.emplace_back(0, 1, 8, 7);
     edges.emplace_back(0, 1, 9, 5);
+    edges.emplace_back(0, 1, 8, 7);
     edges.emplace_back(0, 1, 7, 6);
     edges.emplace_back(0, 1, 7, 2);
     edges.emplace_back(0, 1, 6, 0);
@@ -31,7 +31,11 @@ main(int argc, char** argv)
 
     auto res = count_mnodes(edges,mut_nodes);
 
-    cout << "Muts on root node = " << res.first << '\n';
+    //cout << "Muts on root node = " << res.first << '\n';
+	for(auto i : res.first)
+	{
+		cout<<i.first<<" -> " << i.second << '\n';
+	}
 
     unsigned X=0;
     for(auto & e : edges)

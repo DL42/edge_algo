@@ -30,7 +30,11 @@ main(int argc, char** argv)
 
     auto res = count_mnodes(edges,mut_nodes);
 
-    cout << "Muts on root node = " << res.first << '\n';
+    //cout << "Muts on root node = " << res.first << '\n';
+	for(auto i : res.first)
+	{
+		cout<<i.first<<" -> " << i.second << '\n';
+	}
 
     unsigned X=0;
     for(auto & e : edges)
